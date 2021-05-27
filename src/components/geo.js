@@ -26,7 +26,7 @@ class Geo extends Component {
                <Text>Hey</Text>
            </View> 
         );
-    }
+    } 
 }
 
 export default Geo;
