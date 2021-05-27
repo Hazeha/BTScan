@@ -4,6 +4,7 @@ import {
     View, 
     AsyncStorage,
     Button,
+    Text,
     } from 'react-native';
 import Card from "./scanCard";
 import colors from "../config/colors";
@@ -18,15 +19,9 @@ class HistoryData extends Component {
         
     }
 
-
     componentDidMount() {
         this.readAsyncScanData();
         AsyncStorage.getItem('dataKey').then(data => this.setState({ data }));
-    }
-
-    clearData() {
-        this.forceUpdate();
-        console.log("forced update");
     }
 
     readAsyncScanData = () => {
@@ -34,6 +29,7 @@ class HistoryData extends Component {
             if(data){
             let ourData = JSON.parse(data);
             this.data = ourData;
+            this.setState({ data })
             console.log(this.data);
             }
         }).catch(err => console.log("error >>>>> ",err))
@@ -42,7 +38,7 @@ class HistoryData extends Component {
     render() {
         return (
             <View>
-                <Button onPress={() => this.clearData()} title="Clear Data"/>
+                <Button onPress={() => this.componentDidMount()} title="Update List"/>
                 <FlatList
                     data={this.data}
                     keyExtractor={item => item.timestamp}
@@ -55,6 +51,7 @@ class HistoryData extends Component {
                     />
                     )}
                 />
+                
             </View>
         );
     }

@@ -2,18 +2,19 @@ import React from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import colors from "../config/colors";
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import SimpleDateTime  from 'react-simple-timestamp-to-date';
 
 function Card({ date, devices, longitude, latitude }) {
   return (
     <View style={styles.card}>
-      <Icon name={devices > 15 ?  ('account-alert-outline') : ('account-check-outline')} size={100} color={devices != 0 ? ('red') : ('lightgreen')}  />
+      <Icon name={devices <= 15 ? ('account-check-outline') : ('account-alert-outline')} size={100} color={devices <= 15 ? ('lightgreen') : ('red')}  />
       <View style={styles.detailsContainer}>
         <Text style={styles.title} numberOfLines={1}>
-          Title
+          Scan Info
         </Text>
         
         <Text style={styles.subTitle} numberOfLines={1}>
-          Date : {date}
+          <SimpleDateTime dateSeparator="-" format="DMY" showTime="0">{date / 1000}</SimpleDateTime>
         </Text>
         <Text style={styles.status} numberOfLines={1}>
           Devices : {devices}

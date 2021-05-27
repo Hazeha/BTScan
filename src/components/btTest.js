@@ -21,13 +21,9 @@ class BtTest extends Component {
 
         this.state = {
             listData: [],
-            timePassed: false,
             closeDevices: '0',
-            toggleSwitch: false,
-            isEnabled: false,
             maxPerip: '15',
-            maxPeripWarn: false,
-
+            scanning: false,
             timestamp: '',
             devicesInRange: '',
             longitude: '',
@@ -96,6 +92,10 @@ class BtTest extends Component {
     
     startScanning() {
         console.log('start scanning');
+        this.setState({
+            devicesInRange: null,
+            scanning: true
+        })
         BleManager.scan([], 5, false).then(() => {
             console.log("Scan started");
         });
@@ -103,6 +103,9 @@ class BtTest extends Component {
         const timer = setTimeout(() => {
             this.createAsyncScanData();
             console.log('scan stopped');
+            this.setState({
+                scanning: false
+            })
         }, 5500);
     }
 
@@ -117,7 +120,7 @@ class BtTest extends Component {
             (error) => {
                 console.log(error.code, error.message);
             },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
+            { enableHighAccuracy: true, timeout: 18000, maximumAge: 30000 }
         );
     }
     
@@ -143,16 +146,20 @@ class BtTest extends Component {
                 <View style={styles.body}>
                     <Text style={{fontSize: 20}}>Area Scanner</Text>
                     
-                    <Text style={{fontSize: 16, color: this.state.maxPeripWarn ? ('red'):('blue') }}>Beware many people in your area</Text>
+                    <Text style={{fontSize: 16, color: this.state.closeDevices <= this.state.maxPerip ? ('blue'):('red') }}>
+                        {this.state.closeDevices <= this.state.maxPerip ? ('Not many people in your area'):('Beware many people in your area') }</Text>
                     
                 
                 <Icon name="radar" size={350} color="lightblue" />
                 <Text style={{fontSize: 15}}>There are currently { this.getNumber() } devices in range</Text>
                 </View>
                 <View style={{padding: 50 }}>            
-                    <Button onPress={() => this.createScanData()} title="Start scanning"/>
-                    <View style={styles.swtiches}>
+                    <Button onPress={() => this.createScanData()} title={this.state.scanning === true ? ('Scanning...') : ('Start Scan')}/>
+                </View>
+                <View style={styles.swtiches}>
+                
                         <View style={styles.slider}>
+                            <Text>Max</Text>
                         <Slider
                                 style={{width: 200, height: 40}}
                                 minimumValue={10}
@@ -166,18 +173,7 @@ class BtTest extends Component {
                             />
                             <Text style={styles.sliderHandleText}>{this.sliderHandle()}</Text> 
                         </View>
-                        <View style={styles.autoScan}>
-                            <Text>AutoScan</Text>
-                        <Switch 
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={this.isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={value => this.setState({toggleSwitch: value})}
-                            value={this.state.isEnabled}
-                        /> 
-                        </View>
                     </View>
-                </View>
             </View>
         );
     }
@@ -191,7 +187,7 @@ const styles = StyleSheet.create({
       borderRadius: 10
     },
     swtiches: {
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         flexDirection: 'row'
     },
     sliderHandleText: {

@@ -4,30 +4,13 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import AccountScreen from './screens/Account';
 import HistoryScreen from './screens/History';
-// this is the screen we'll be pushing into the stack
+
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-const ExitScreen = () => {
-    return (
-      <View style={styles.root}>
-        <Text>Exit Screen</Text>
-      </View>
-    );
-  }
-  ExitScreen.options = {
-    topBar: {
-        title: {
-            text: 'Exit',
-        },
-    },
-    bottomTab: {
-        Text: 'Exit'
-    }
-}
 
 // Register component to navigation
 Navigation.registerComponent('Account', () => AccountScreen);
 Navigation.registerComponent('History', () => HistoryScreen);
-Navigation.registerComponent('Exit', () => ExitScreen);
+
 // Default Options
 Navigation.setDefaultOptions({
     statusBar: {
@@ -51,16 +34,13 @@ Navigation.setDefaultOptions({
     }
   });
 
-
-  // Navigation Stacks for each high-level routing elements
 Navigation.events().registerAppLaunchedListener(async () => {
-  
   Navigation.setRoot({
     root: {
         bottomTabs: {
             children: [{
                 stack: {
-                    id: 'ACCOUNT_TAB',
+                    id: 'ACCOUNT_TAB',                    
                     children: [{
                         component: {
                             id: 'ACOUNT',
@@ -89,23 +69,8 @@ Navigation.events().registerAppLaunchedListener(async () => {
                         }
                     }
                 }
-            },{
-                stack: {
-                    id: 'EXIT_TAB',
-                    children: [{
-                        component: {
-                            id: 'EXIT',
-                            name: 'Exit'
-                        }
-                    }],
-                    options: {
-                        bottomTab: {
-                            text: 'Exit App',
-                            icon: require('../public/assets/exit-icon.png')
-                        }
-                    }
-                }
-            }]
+            },
+          ]
         }
     }
   });
