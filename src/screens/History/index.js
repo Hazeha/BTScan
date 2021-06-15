@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import HistoryData from "../../components/historyData";
 
-const HistoryScreen = (props) => {
+const HistoryScreen = () => {
   return (
     <View>
       <HistoryData/>
